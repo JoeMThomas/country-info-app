@@ -1,10 +1,49 @@
-import { useState } from 'react'
+import {useEffect, useState} from 'react'
 import './App.css'
 import Search from "./components/Search.jsx";
 import Card from "./components/CountryCard.jsx";
 
+const API_BASE_URL = "https://restcountries.com/v3.1";
+
+const API_OPTIONS = {
+    method: "GET",
+    headers: {
+        accept: "application/json"
+    }
+}
+
 function App() {
     const [searchTerm, setSearchTerm] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [countryList, setCountryList] = useState([]);
+
+    const fetchCountries = async () => {
+        try {
+            const endpoint = `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
+            const response = await fetch(endpoint);
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch countries");
+            }
+
+            const data = await response.json();
+
+            if (data.Response === "False") {
+                setErrorMessage(data.Error || "Failed to fetch movies");
+                setCountryList([]);
+                return;
+            }
+
+            setCountryList(data|| []);
+        } catch (error) {
+            console.error(`Error fetching countries: ${error}`);
+        }
+    }
+
+    useEffect( () => {
+        fetchCountries();
+    }, []);
+
     return (
       <main>
         <div className="w-full h-[400px] bg-[url('/flag-banner.png')] bg-center bg-cover bg-no-repeat">
@@ -18,12 +57,11 @@ function App() {
             <h1 className="text-2xl text-[#1E3A8A]">All Countries</h1>
         </div>
         <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
-            <Card />
+            {errorMessage && <p className="text-red-600">{errorMessage}</p>}
+            {countryList.map((country) => (
+                <Card key={country.name} country={country} />
+            ))}
+
         </div>
       </main>
     )
