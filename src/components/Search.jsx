@@ -2,8 +2,8 @@ import React from 'react';
 
 const Search = ({searchTerm, setSearchTerm}) => {
     return (
-        <div className="w-full bg-[#629AF6] px-2 py-2  mt-10 rounded-3xl max-w-3xl mx-auto">
-            <div className="relative flex items-center h-10">
+        <div className="w-full bg-[#629AF6] px-2 py-2  mt-10 rounded-3xl max-w-2xl mx-auto">
+            <div className="relative flex items-center h-8">
                 <img className="absolute right-3 h-5 w-5" src="search-icon.svg" alt="Search"/>
                 <input
                     type="text"
