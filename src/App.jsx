@@ -19,11 +19,11 @@ function App() {
     const [countryList, setCountryList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
-    const fetchCountries = async () => {
+    const fetchCountries = async (query = '') => {
         try {
             setIsLoading(true);
             setErrorMessage("");
-            const endpoint = `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
+            const endpoint = query ? `${API_BASE_URL}/name/${encodeURIComponent(query)}` : `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
             const response = await fetch(endpoint);
 
             if (!response.ok) {
@@ -41,8 +41,8 @@ function App() {
     }
 
     useEffect( () => {
-        fetchCountries();
-    }, []);
+        fetchCountries(searchTerm);
+    }, [searchTerm]);
 
     return (
       <main>
