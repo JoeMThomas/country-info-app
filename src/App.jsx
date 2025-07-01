@@ -22,6 +22,7 @@ function App() {
     const fetchCountries = async () => {
         try {
             setIsLoading(true);
+            setErrorMessage("");
             const endpoint = `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
             const response = await fetch(endpoint);
 
@@ -30,17 +31,12 @@ function App() {
             }
 
             const data = await response.json();
-
-            if (data.Response === "False") {
-                setErrorMessage(data.Error || "Failed to fetch movies");
-                setCountryList([]);
-                return;
-            }
-
             setCountryList(data|| []);
-            setIsLoading(false);
         } catch (error) {
             console.error(`Error fetching countries: ${error}`);
+            setErrorMessage("Error fetching countries, please try again later.");
+        } finally {
+            setIsLoading(false);
         }
     }
 
