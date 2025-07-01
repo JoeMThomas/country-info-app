@@ -5,7 +5,12 @@
 @layer base {
   body {
 
-    @apply min-h-screen bg-linear-to-b from-[#E0F2FE] to-[#3B82F6];
+    @apply min-h-screen;
+    background: linear-gradient(
+            to bottom,
+            #E0F2FE 0px,
+            #3B82F6 850px
+    );
   }
 }
 

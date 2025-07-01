@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import './App.css'
 import Search from "./components/Search.jsx";
 import Card from "./components/CountryCard.jsx";
+import Spinner from "./components/Spinner.jsx";
 
 const API_BASE_URL = "https://restcountries.com/v3.1";
 
@@ -16,9 +17,11 @@ function App() {
     const [searchTerm, setSearchTerm] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
     const [countryList, setCountryList] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const fetchCountries = async () => {
         try {
+            setIsLoading(true);
             const endpoint = `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
             const response = await fetch(endpoint);
 
@@ -35,6 +38,7 @@ function App() {
             }
 
             setCountryList(data|| []);
+            setIsLoading(false);
         } catch (error) {
             console.error(`Error fetching countries: ${error}`);
         }
@@ -56,12 +60,16 @@ function App() {
         <div className="w-full mt-8">
             <h1 className="text-2xl text-[#1E3A8A]">All Countries</h1>
         </div>
-        <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
-            {errorMessage && <p className="text-red-600">{errorMessage}</p>}
-            {countryList.map((country) => (
-                <Card key={country.name} country={country} />
-            ))}
-
+        <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {isLoading ? (
+                <p><Spinner /></p>
+            ) : errorMessage ? (
+                <p className="text-red-600">{errorMessage}</p>
+            ) : (
+                countryList.map((country) => (
+                        <Card key={country.name} country={country} />
+                ))
+            )}
         </div>
       </main>
     )
