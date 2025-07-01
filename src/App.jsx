@@ -18,12 +18,14 @@ function App() {
     const [errorMessage, setErrorMessage] = useState("");
     const [countryList, setCountryList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [regionFilter, setRegionFilter] = useState("");
 
-    const fetchCountries = async (query = '') => {
+
+    const fetchCountries = async () => {
         try {
             setIsLoading(true);
             setErrorMessage("");
-            const endpoint = query ? `${API_BASE_URL}/name/${encodeURIComponent(query)}` : `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
+            const endpoint = regionFilter ? `${API_BASE_URL}/region/${regionFilter}` : `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
             const response = await fetch(endpoint);
 
             if (!response.ok) {
@@ -32,6 +34,7 @@ function App() {
 
             const data = await response.json();
             setCountryList(data|| []);
+
         } catch (error) {
             console.error(`Error fetching countries: ${error}`);
             setErrorMessage("Error fetching countries, please try again later.");
@@ -40,9 +43,13 @@ function App() {
         }
     }
 
+    const filteredCountries = countryList.filter(country =>
+        country.name.official.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     useEffect( () => {
         fetchCountries(searchTerm);
-    }, [searchTerm]);
+    }, [regionFilter]);
 
     return (
       <main>
@@ -56,13 +63,30 @@ function App() {
         <div className="w-full mt-8">
             <h1 className="text-2xl text-[#1E3A8A]">All Countries</h1>
         </div>
+        <div className="mt-5 text-left bg-[#1E3A8A] text-white text-lg">
+          Filters
+            <div className="grid grid-cols-4 h-10 bg-sky-500 px-5">
+                <div className="flex items-center gap-3">
+                    Asia<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Asia")}/>
+                </div>
+                <div className="flex items-center gap-3">
+                    Africa<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Africa")}/>
+                </div>
+                <div className="flex items-center gap-3">
+                    Europe<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Europe")}/>
+                </div>
+                <div className="flex items-center gap-3">
+                    Americas<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Americas")}/>
+                </div>
+            </div>
+        </div>
         <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {isLoading ? (
                 <p><Spinner /></p>
             ) : errorMessage ? (
                 <p className="text-red-600">{errorMessage}</p>
             ) : (
-                countryList.map((country) => (
+                filteredCountries.map((country) => (
                         <Card key={country.name} country={country} />
                 ))
             )}
