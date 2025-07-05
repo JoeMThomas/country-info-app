@@ -3,6 +3,7 @@ import './App.css'
 import Search from "./components/Search.jsx";
 import Card from "./components/CountryCard.jsx";
 import Spinner from "./components/Spinner.jsx";
+import Filter from "./components/Filter.jsx";
 
 const API_BASE_URL = "https://restcountries.com/v3.1";
 
@@ -65,20 +66,7 @@ function App() {
         </div>
         <div className="mt-5 text-left bg-[#1E3A8A] text-white text-lg">
           Filters
-            <div className="grid grid-cols-4 h-10 bg-sky-500 px-5">
-                <div className="flex items-center gap-3">
-                    Asia<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Asia")}/>
-                </div>
-                <div className="flex items-center gap-3">
-                    Africa<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Africa")}/>
-                </div>
-                <div className="flex items-center gap-3">
-                    Europe<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Europe")}/>
-                </div>
-                <div className="flex items-center gap-3">
-                    Americas<input className="lg:scale-130" type="radio" name="region" onChange={() => setRegionFilter("Americas")}/>
-                </div>
-            </div>
+            <Filter setRegionFilter={setRegionFilter}/>
         </div>
         <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {isLoading ? (
