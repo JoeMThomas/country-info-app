@@ -20,6 +20,10 @@ function App() {
     const [countryList, setCountryList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [regionFilter, setRegionFilter] = useState("");
+    const [sortOrder, setSortOrder] = useState("");
+    const [sortAlpha, setSortAlpha] = useState(false);
+
+
 
 
     const fetchCountries = async () => {
@@ -45,8 +49,15 @@ function App() {
     }
 
     const filteredCountries = countryList.filter(country =>
-        country.name.official.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+        country.name.common.toLowerCase().includes(searchTerm.toLowerCase())).sort((a,b) => {
+            if (sortOrder === "asc") {
+                return a.population - b.population;
+            } else if (sortOrder === "desc") {
+                return b.population - a.population;
+            } else if (sortAlpha) {
+                return a.name.common.localeCompare(b.name.common);
+            }
+            });
 
     useEffect( () => {
         fetchCountries(searchTerm);
@@ -65,8 +76,8 @@ function App() {
             <h1 className="text-2xl text-[#1E3A8A]">All Countries</h1>
         </div>
         <div className="mt-5 text-left bg-[#1E3A8A] text-white text-lg">
-          Filters
-            <Filter setRegionFilter={setRegionFilter}/>
+            <h1 className="text-2xl">Filters</h1>
+            <Filter setRegionFilter={setRegionFilter} setSortOrder={setSortOrder} setSortAlpha={setSortAlpha}/>
         </div>
         <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {isLoading ? (
