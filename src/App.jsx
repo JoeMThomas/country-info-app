@@ -19,7 +19,7 @@ function App() {
     const [errorMessage, setErrorMessage] = useState("");
     const [countryList, setCountryList] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [regionFilter, setRegionFilter] = useState("");
+    const [regionFilter, setRegionFilter] = useState([]);
     const [sortOrder, setSortOrder] = useState("");
     const [sortAlpha, setSortAlpha] = useState(false);
 
@@ -30,7 +30,7 @@ function App() {
         try {
             setIsLoading(true);
             setErrorMessage("");
-            const endpoint = regionFilter ? `${API_BASE_URL}/region/${regionFilter}` : `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
+            const endpoint = `${API_BASE_URL}/all?fields=name,region,population,capital,languages,currency,flags,currencies`;
             const response = await fetch(endpoint);
 
             if (!response.ok) {
@@ -49,7 +49,7 @@ function App() {
     }
 
     const filteredCountries = countryList.filter(country =>
-        country.name.common.toLowerCase().includes(searchTerm.toLowerCase())).sort((a,b) => {
+        country.name.common.toLowerCase().includes(searchTerm.toLowerCase()) && (regionFilter.length > 0 ? regionFilter.includes(country.region) : true)).sort((a,b) => {
             if (sortOrder === "asc") {
                 return a.population - b.population;
             } else if (sortOrder === "desc") {
@@ -59,9 +59,17 @@ function App() {
             }
             });
 
+    const toggleFilter = ({filterList, setFilterList, filter}) => {
+        if (filterList.includes(filter)) {
+            setFilterList(filterList.filter(a => a !== filter));
+        } else {
+            setFilterList([...filterList, filter]);
+        }
+    }
+
     useEffect( () => {
-        fetchCountries(searchTerm);
-    }, [regionFilter]);
+        fetchCountries();
+    }, []);
 
     return (
       <main>
@@ -77,7 +85,7 @@ function App() {
         </div>
         <div className="mt-5 text-left bg-[#1E3A8A] text-white text-lg">
             <h1 className="text-2xl">Filters</h1>
-            <Filter setRegionFilter={setRegionFilter} setSortOrder={setSortOrder} setSortAlpha={setSortAlpha}/>
+            <Filter regionFilter={regionFilter} setRegionFilter={setRegionFilter} setSortOrder={setSortOrder} setSortAlpha={setSortAlpha} toggleFilter={toggleFilter}/>
         </div>
         <div className=" mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {isLoading ? (
