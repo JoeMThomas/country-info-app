@@ -24,8 +24,6 @@ function App() {
     const [sortAlpha, setSortAlpha] = useState(false);
 
 
-
-
     const fetchCountries = async () => {
         try {
             setIsLoading(true);
@@ -59,6 +57,7 @@ function App() {
             }
             });
 
+    // Adds a filter to its list if not present and removes if present
     const toggleFilter = ({filterList, setFilterList, filter}) => {
         if (filterList.includes(filter)) {
             setFilterList(filterList.filter(a => a !== filter));
@@ -73,9 +72,8 @@ function App() {
 
     return (
       <main>
-        <div className="w-full h-[400px] bg-[url('/flag-banner.png')] bg-center bg-cover bg-no-repeat">
+        <div className="w-full h-[400px] bg-[url('/flag-banner.png')] bg-center bg-cover bg-no-repeat" />
 
-        </div>
         <div className="flex-col justify-center px-10">
             <h1 className="mt-4 text-6xl text-[#1E3A8A]">Find facts about countries</h1>
             <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>

@@ -1,30 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import FilterOption from "./FilterOption.jsx";
 
 const Filter = ({regionFilter, setRegionFilter, setSortOrder, setSortAlpha, toggleFilter}) => {
-
+    const regions = ["Asia", "Africa", "Americas", "Europe", "Oceana"];
     return (
         <div>
-            <div className="grid grid-cols-5 w-140 h-10 bg-sky-500">
-                <div className="flex items-center gap-3">
-                    Asia<input className="lg:scale-130 mt-1" type="checkbox" name="region" onChange={() => toggleFilter({
-                    filterList: regionFilter, setFilterList: setRegionFilter, filter: "Asia" })} />
-                </div>
-                <div className="flex items-center gap-3">
-                    Africa<input className="lg:scale-130 mt-1" type="checkbox" name="region" onChange={() => toggleFilter({
-                    filterList: regionFilter, setFilterList: setRegionFilter, filter: "Africa" })}/>
-                </div>
-                <div className="flex items-center gap-3">
-                    Europe<input className="lg:scale-130 mt-1" type="checkbox" name="region" onChange={() => toggleFilter({
-                    filterList: regionFilter, setFilterList: setRegionFilter, filter: "Europe" })}/>
-                </div>
-                <div className="flex items-center gap-3">
-                    Americas<input className="lg:scale-130 mt-1" type="checkbox" name="region" onChange={() => toggleFilter({
-                    filterList: regionFilter, setFilterList: setRegionFilter, filter: "Americas" })}/>
-                </div>
-                <div className="flex items-center gap-3">
-                    Oceania<input className="lg:scale-130 mt-1" type="checkbox" name="region" onChange={() => toggleFilter({
-                    filterList: regionFilter, setFilterList: setRegionFilter, filter: "Oceania" })}/>
-                </div>
+            <div className="grid grid-cols-5 w-150 h-10 bg-sky-500">
+                {/* Render every region filter */}
+                {regions.map(region => (
+                    <FilterOption
+                        optionName={region}
+                        toggleFilter={toggleFilter}
+                        filterList={regionFilter}
+                        setFilterList={setRegionFilter}
+                    />
+                ))}
             </div>
 
             <div className="">
